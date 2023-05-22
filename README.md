@@ -2,7 +2,7 @@
 Collection of Powershell scripts for automating processes in Access Reviews, such as review creation
 
 ## Scenarios
-- [Contacted and reviewed reviewers](#GetListOfContactedReviwers)
+- [Get contacted reviewers and reviewers with decisions](#GetListOfContactedReviwers)
 
 ## Prerequisites
 
@@ -18,16 +18,33 @@ Collection of Powershell scripts for automating processes in Access Reviews, suc
         3. Fill out the URL text box with an Access Review’s URL: https://graph.microsoft.com/v1.0/identityGovernance/accessReviews/definitions
         4. The permissions you require will appear in the box below
         5. You need these Graph Permissions:
-            - AccessReview.Read.All
-            - AccessReview.ReadWrite.All
-        6. Click “Consent” if you don’t already have the permissions, if it reads “Unconsent” you already have the permissions.
+            - **AccessReview.Read.All**
+            - **AccessReview.ReadWrite.All**
+        6. Click '**Consent**' if you don’t already have the permissions, if it reads '**Unconsent**' you already have the permissions.
 
-## Executing the scripts
+### Executing the scripts
 
-1. Run the desired Powershell script like so:
-![image](https://github.com/leherpel/ar-script-examples/assets/81385520/1517e2ed-36aa-4755-b12e-f7444238daf0)
+1. Run the desired Powershell script like so `.\asdf.ps1`.
 3. You might be prompted for an interactive login as the user you granted permissions to in Prerequisites.
 
 
 ## GetListOfContactedReviwers
 
+1. [Powershell script](./GetListOfContactedReviwers.ps1)
+2. Sample execution and output:
+![image](https://github.com/leherpel/ar-script-examples/assets/81385520/1517e2ed-36aa-4755-b12e-f7444238daf0)
+![image](https://github.com/leherpel/ar-script-examples/assets/81385520/d372f13a-7e93-4299-8020-21b67eb0af52)
+
+### Use the APIs to find contacted reviewers and find decisions made:
+1. Get a list of review definitions
+    - [List definitions](https://learn.microsoft.com/en-us/graph/api/accessreviewset-list-definitions?view=graph-rest-1.0&tabs=http)
+    - `GET - https://graph.microsoft.com/v1.0/identityGovernance/accessReviews/definitions`
+2. For each definition get a list of instances:
+    - [List instances](https://learn.microsoft.com/en-us/graph/api/accessreviewscheduledefinition-list-instances?view=graph-rest-1.0&tabs=http)
+    - `GET - https://graph.microsoft.com/v1.0/identityGovernance/accessReviews/definitions/fd3c47e4-c606-472e-b7de-6a217aa68c57/instances`
+3. For each instance get a list of contacted reviewers (reviewers who have been notified to review):
+    - [List contactedReviewers](https://learn.microsoft.com/en-us/graph/api/accessreviewinstance-list-contactedreviewers?view=graph-rest-1.0&tabs=http)
+    - `GET - https://graph.microsoft.com/v1.0/identityGovernance/accessReviews/definitions/fd3c47e4-c606-472e-b7de-6a217aa68c57/instances/fd3c47e4-c606-472e-b7de-6a217aa68c57/contactedReviewers`
+4. For each instance get a list of decision items:
+    - [List decisions](https://learn.microsoft.com/en-us/graph/api/accessreviewinstance-list-decisions?view=graph-rest-1.0&tabs=http)
+    - `GET - https://graph.microsoft.com/v1.0/identityGovernance/accessReviews/definitions/fd3c47e4-c606-472e-b7de-6a217aa68c57/instances/fd3c47e4-c606-472e-b7de-6a217aa68c57/decisions`
