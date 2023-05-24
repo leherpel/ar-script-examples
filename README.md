@@ -33,7 +33,7 @@ Collection of Powershell scripts for automating processes in Access Reviews, suc
 1. [Powershell script](./GetListOfContactedReviwers.ps1)
 2. Sample execution and output:
 ![image](https://github.com/leherpel/ar-script-examples/assets/81385520/1517e2ed-36aa-4755-b12e-f7444238daf0)
-![image](https://github.com/leherpel/ar-script-examples/assets/81385520/d372f13a-7e93-4299-8020-21b67eb0af52)
+![image](https://github.com/leherpel/ar-script-examples/assets/81385520/8e11e1a3-9460-4323-9a7d-8f0bd905a12e)
 
 ### Use the APIs to find contacted reviewers and find decisions made:
 1. Get a list of review definitions
