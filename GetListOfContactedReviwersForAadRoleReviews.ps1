@@ -22,10 +22,10 @@ $reviewerDictionary = New-Object System.Collections.Generic.Dictionary"[String,O
 $missingDecisionsFor = @{
 }
 
-$timestamp = Get-Date -Format "MM-dd-yyyy HH:mm:ss"
+$timestamp = Get-Date ([datetime]::UtcNow) -Format "MM-dd-yyyy HH:mm:ss"
 $account = Get-MgContext | Select Account
-Set-Content -Path $csvFilePath -Value "Generated at $timestamp for $account"
-$header = "Review Id, Review name, Due date, Review status, Reviewer UPN, Approved, Denied, Don't know, Not reviewed, Reviewer decisions, Total decisions"
+Set-Content -Path $csvFilePath -Value "Generated at $timestamp UTC for $account"
+$header = "Review Id, Review name, Resource name, Due date, Review status, Reviewer UPN, Approved, Denied, Don't know, Not reviewed, Reviewer decisions, Total decisions"
 Add-Content -Path $csvFilePath -Value $header 
 
 # Start processing reviews
@@ -40,7 +40,7 @@ while ($accessReviews -and $accessReviews.Length -gt 0) {
         $reviewName = $accessReview.DisplayName
         $tenantId = $accessReview.TenantId
 
-        # Check if it is the correct review type
+        # Check if it is the correct review type, this example shows checking whether or not the review is an AAD role review
 #        if (!$accessReview -or
 #            !$accessReview.Scope -or
 #            !$accessReview.Scope.AdditionalProperties -or
@@ -50,9 +50,9 @@ while ($accessReviews -and $accessReviews.Length -gt 0) {
 #            !$accessReview.Scope.AdditionalProperties.resourceScopes[0].query -or
 #            !$accessReview.Scope.AdditionalProperties.resourceScopes[0].query.Contains("roleManagement")){
 #
-        #    Write-Host "Non-privileged role review"
-        #    continue
-        #}
+#            Write-Host "Non-privileged role review"
+#            continue
+#        }
 
         Write-Host "Processing review $reviewName"
 
@@ -89,6 +89,7 @@ while ($accessReviews -and $accessReviews.Length -gt 0) {
                             Approved = 0
                             Denied = 0
                             DontKnow = 0
+                            ResourceName = ""
                         }
 
                         $reviewerDictionary.Add($key, $newUser)
@@ -114,6 +115,7 @@ while ($accessReviews -and $accessReviews.Length -gt 0) {
 		                        Approved = 0
 		                        Denied = 0
 		                        DontKnow = 0
+                                ResourceName = ""
 	                        }
                             $reviewerDictionary.Add($key, $newUser)
                         }
@@ -125,6 +127,8 @@ while ($accessReviews -and $accessReviews.Length -gt 0) {
                         } else {
                             [int]$reviewerDictionary[$lookupKey].DontKnow += 1
                         }
+
+                        $reviewerDictionary[$lookupKey].ResourceName = $decision.Resource.DisplayName
                     }
                     $total += 1
                 }
@@ -134,10 +138,10 @@ while ($accessReviews -and $accessReviews.Length -gt 0) {
                     $complete = $true
                 }
 
-                # "Review Id, Review name, Due date, Review status, Reviewer UPN, Approved, Denied, Don't know, Not reviewed, Reviewer decisions, Total decisions"
                 # Write results for instance
+                # add timezone, add reviewed resource, look into pdf
                 foreach ($reviewer in $reviewerDictionary.Values) {
-                    $line = $instanceReviewId + "," + $reviewName + "," + $instance.endDateTime + "," + $instance.Status + "," + $reviewer.Upn + "," + $reviewer.Approved + "," + $reviewer.Denied + "," + $reviewer.DontKnow + "," + ($total - ($reviewer.Denied + $reviewer.Approved + $reviewer.DontKnow)) + "," + ($reviewer.Denied + $reviewer.Approved + $reviewer.DontKnow) + "," + $total
+                    $line = $instanceReviewId + "," + $reviewName + "," + $reviewer.ResourceName + "," + $instance.endDateTime + "," + $instance.Status + "," + $reviewer.Upn + "," + $reviewer.Approved + "," + $reviewer.Denied + "," + $reviewer.DontKnow + "," + ($total - ($reviewer.Denied + $reviewer.Approved + $reviewer.DontKnow)) + "," + ($reviewer.Denied + $reviewer.Approved + $reviewer.DontKnow) + "," + $total
                     Add-Content -Path $csvFilePath -Value $line 
                 }
 
