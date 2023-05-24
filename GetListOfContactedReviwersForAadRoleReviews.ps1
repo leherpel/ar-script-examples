@@ -25,7 +25,7 @@ $missingDecisionsFor = @{
 $timestamp = Get-Date -Format "MM-dd-yyyy HH:mm:ss"
 $account = Get-MgContext | Select Account
 Set-Content -Path $csvFilePath -Value "Generated at $timestamp for $account"
-$header = "Review Id, Review Name, Start Date, Review Status, Reviewer UPN, Decisions made, Total, Completed?"
+$header = "Review Id, Review Name, Due Date, Review Status, Reviewer UPN, Approved, Denied, Not Reviewed, Decisions made, Total"
 Add-Content -Path $csvFilePath -Value $header 
 
 # Start processing reviews
@@ -58,7 +58,7 @@ while ($accessReviews -and $accessReviews.Length -gt 0) {
 
         # Get review's instances
         [int]$instancesSkip = 0
-        $instances = Get-MgIdentityGovernanceAccessReviewDefinitionInstance -AccessReviewScheduleDefinitionId $accessReview.Id -Top 100 -Skip $instancesSkip -Sort startDateTime
+        $instances = Get-MgIdentityGovernanceAccessReviewDefinitionInstance -AccessReviewScheduleDefinitionId $accessReview.Id -Top 100 -Skip $instancesSkip -Sort endDateTime
 
         # Process this batch of instance
         $instanceReviewId = $accessReview.Id
@@ -86,6 +86,9 @@ while ($accessReviews -and $accessReviews.Length -gt 0) {
                             Id = $reviewer.Id
                             Name = $reviewer.displayName
                             Upn = $reviewer.userPrincipalName
+                            Approved = 0
+                            Denied = 0
+                            NotReviewed = 0
                         }
 
                         $reviewerDictionary.Add($key, $newUser)
@@ -100,6 +103,26 @@ while ($accessReviews -and $accessReviews.Length -gt 0) {
                 foreach ($decision in $decisions) {
                     if ($decision.reviewedBy -and $decision.reviewedBy.Id -ne "00000000-0000-0000-0000-000000000000") {
                         $decisionsMade += 1
+                        $lookupKey = $decision.reviewedBy.Id + $instance.Id
+                        
+                        if (!$reviewerDictionary.ContainsKey($key)) {
+                            $newUser = [PSCustomObject]@{
+		                        ReviewName = $accessReview.DisplayName
+		                        Id = $decision.ReviewedBy.Id
+		                        Name = $decision.ReviewedBy.DisplayName
+		                        Upn = $decision.ReviewedBy.UserPrincipalName
+		                        Approved = 0
+		                        Denied = 0
+		                        NotReviewed = 0
+	                        }
+                            $reviewerDictionary.Add($key, $newUser)
+                        }
+
+                        if ($decision.Decision -eq "Deny") {
+                            [int]$reviewerDictionary[$lookupKey].Denied += 1
+                        } elseif ($decision.Decision -eq "Approve") {
+                            [int]$reviewerDictionary[$lookupKey].Approved += 1
+                        }
                     }
                     $total += 1
                 }
@@ -109,9 +132,10 @@ while ($accessReviews -and $accessReviews.Length -gt 0) {
                     $complete = $true
                 }
 
+                # "Review Id, Review Name, Due date, Review Status, Reviewer UPN, Approved, Denied, Not Reviewed, Decisions made, Total decsisions?"
                 # Write results for instance
                 foreach ($reviewer in $reviewerDictionary.Values) {
-                    $line = $instanceReviewId + "," + $reviewName + "," + $instance.startDateTime + "," + $instance.Status + "," + $reviewer.Upn + "," + $decisionsMade + "," + $total + "," + $complete
+                    $line = $instanceReviewId + "," + $reviewName + "," + $instance.endDateTime + "," + $instance.Status + "," + $reviewer.Upn + "," + $reviewer.Approved + "," + $reviewer.Denied + ","  + ($total - ($reviewer.Denied + $reviewer.Approved)) + "," + $decisionsMade + "," + $total
                     Add-Content -Path $csvFilePath -Value $line 
                 }
 
