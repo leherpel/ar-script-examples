@@ -25,7 +25,7 @@ $missingDecisionsFor = @{
 $timestamp = Get-Date -Format "MM-dd-yyyy HH:mm:ss"
 $account = Get-MgContext | Select Account
 Set-Content -Path $csvFilePath -Value "Generated at $timestamp for $account"
-$header = "Review Id, Review name, Due date, Review status, Reviewer UPN, Approved, Denied, Not reviewed, Reviewer decisions, Total"
+$header = "Review Id, Review name, Due date, Review status, Reviewer UPN, Approved, Denied, Not reviewed, Total reviewer decisions, Total"
 Add-Content -Path $csvFilePath -Value $header 
 
 # Start processing reviews
