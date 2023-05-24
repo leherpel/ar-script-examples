@@ -41,18 +41,18 @@ while ($accessReviews -and $accessReviews.Length -gt 0) {
         $tenantId = $accessReview.TenantId
 
         # Check if it is the correct review type
-        if (!$accessReview -or
-            !$accessReview.Scope -or
-            !$accessReview.Scope.AdditionalProperties -or
-            !$accessReview.Scope.AdditionalProperties.Count -gt 0 -or
-            !$accessReview.Scope.AdditionalProperties.resourceScopes -or
-            !$accessReview.Scope.AdditionalProperties.resourceScopes.Length -gt 0 -or
-            !$accessReview.Scope.AdditionalProperties.resourceScopes[0].query -or
-            !$accessReview.Scope.AdditionalProperties.resourceScopes[0].query.Contains("roleManagement")){
-
-            Write-Host "Non-privileged role review"
-            continue
-        }
+#        if (!$accessReview -or
+#            !$accessReview.Scope -or
+#            !$accessReview.Scope.AdditionalProperties -or
+#            !$accessReview.Scope.AdditionalProperties.Count -gt 0 -or
+#            !$accessReview.Scope.AdditionalProperties.resourceScopes -or
+#            !$accessReview.Scope.AdditionalProperties.resourceScopes.Length -gt 0 -or
+#            !$accessReview.Scope.AdditionalProperties.resourceScopes[0].query -or
+#            !$accessReview.Scope.AdditionalProperties.resourceScopes[0].query.Contains("roleManagement")){
+#
+        #    Write-Host "Non-privileged role review"
+        #    continue
+        #}
 
         Write-Host "Processing review $reviewName"
 
