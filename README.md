@@ -2,7 +2,7 @@
 Collection of Powershell scripts for automating processes in Access Reviews, such as review creation
 
 ## Scenarios
-- [Get contacted reviewers and reviewers with decisions](#GetListOfContactedReviwers)
+- [Get contacted reviewers and reviewers with decisions](#GetListOfContactedReviwersForAadRoleReviews)
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ Collection of Powershell scripts for automating processes in Access Reviews, suc
 3. You might be prompted for an interactive login as the user you granted permissions to in Prerequisites.
 
 
-## GetListOfContactedReviwers
+## GetListOfContactedReviwersForAadRoleReviews
 
 1. [Powershell script](./GetListOfContactedReviwers.ps1)
 2. Sample execution and output:
