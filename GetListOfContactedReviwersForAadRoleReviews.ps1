@@ -25,7 +25,7 @@ $missingDecisionsFor = @{
 $timestamp = Get-Date -Format "MM-dd-yyyy HH:mm:ss"
 $account = Get-MgContext | Select Account
 Set-Content -Path $csvFilePath -Value "Generated at $timestamp for $account"
-$header = "Review Id, Review Name, Start Date, Review Status, Reviewer Name, Reviewer UPN, Decisions made, Total, Completed?"
+$header = "Review Id, Review Name, Start Date, Review Status, Reviewer UPN, Decisions made, Total, Completed?"
 Add-Content -Path $csvFilePath -Value $header 
 
 # Start processing reviews
@@ -111,7 +111,7 @@ while ($accessReviews -and $accessReviews.Length -gt 0) {
 
                 # Write results for instance
                 foreach ($reviewer in $reviewerDictionary.Values) {
-                    $line = $instanceReviewId + "," + $reviewName + "," + $instance.startDateTime + "," + $instance.Status + "," + $reviewer.Name + "," + $reviewer.Upn + "," + $decisionsMade + "," + $total + "," + $complete
+                    $line = $instanceReviewId + "," + $reviewName + "," + $instance.startDateTime + "," + $instance.Status + "," + $reviewer.Upn + "," + $decisionsMade + "," + $total + "," + $complete
                     Add-Content -Path $csvFilePath -Value $line 
                 }
 
