@@ -1,4 +1,4 @@
-﻿# Install the AzureAD module if not installed
+# Install the AzureAD module if not installed
 if (-not (Get-Module -Name AzureAD -ErrorAction SilentlyContinue)) {
     Install-Module -Name AzureAD -Force -AllowClobber -Scope CurrentUser
 }
@@ -39,32 +39,30 @@ do {
         Write-Output "Review Id: $($_.id)"
         Write-Output "Recurrence: $($_.properties.settings.recurrence.pattern.type)"
 
-        if ($_.properties.settings.recurrence.pattern.type -eq "absoluteMonthly" -and $_.properties.settings.recurrence.pattern.interval -eq 1) {
-            # Clone the object to avoid modifying the original
-            $tmpBody = $_.PSObject.Copy()
+        # Clone the object to avoid modifying the original
+        $tmpBody = $_.PSObject.Copy()
 
-            # Modify the recurrence pattern type
-            $tmpBody.properties.settings.recurrence.pattern.type = "absoluteMonthly"
-            $tmpBody.properties.settings.recurrence.pattern.interval = 3
+        # Modify the recurrence pattern type
+        $tmpBody.properties.settings.recurrence.pattern.type = "absoluteMonthly"
+        $tmpBody.properties.settings.recurrence.pattern.interval = 3
 
-            # You might need/want to modify this property: 
-            # $tmpBody.properties.settings.instanceDurationInDay = 5
+        # You might need/want to modify this property: 
+        # $tmpBody.properties.settings.instanceDurationInDay = 5
 
-            $putUrl = "https://management.azure.com/subscriptions/$subscriptionId/providers/Microsoft.Authorization/accessReviewScheduleDefinitions/$($_.name)?api-version=$apiVersion"
+        $putUrl = "https://management.azure.com/subscriptions/$subscriptionId/providers/Microsoft.Authorization/accessReviewScheduleDefinitions/$($_.name)?api-version=$apiVersion"
             
-            Write-Output $putUrl
+        Write-Output $putUrl
 
-            $jsonString = $tmpBody | ConvertTo-Json -Depth 10
+        $jsonString = $tmpBody | ConvertTo-Json -Depth 10
 
-            Write-Output $jsonString
+        Write-Output $jsonString
 
-            # Make the PUT request to update the Access Review Schedule Definition
-            $response2 = Invoke-RestMethod -Uri $putUrl -Method Put -Headers @{
-                Authorization = "Bearer $accessToken"
-                'Content-Type' = 'application/json'
-            } -Body $jsonString
-
-        }
+        # Make the PUT request to update the Access Review Schedule Definition
+        $response2 = Invoke-RestMethod -Uri $putUrl -Method Put -Headers @{
+            Authorization = "Bearer $accessToken"
+            'Content-Type' = 'application/json'
+        } -Body $jsonString
+   
     }
 
     # Check for the presence of a nextLink
