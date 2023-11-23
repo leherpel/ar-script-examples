@@ -2,6 +2,9 @@
 if (-not (Get-Module -Name AzureAD -ErrorAction SilentlyContinue)) {
     Install-Module -Name AzureAD -Force -AllowClobber -Scope CurrentUser
 }
+if (-not (Get-Module -Name Az -ErrorAction SilentlyContinue)) {
+    Install-Module -Name Az -AllowClobber -Scope CurrentUser
+}
 
 # Import the AzureAD module
 Import-Module AzureAD
