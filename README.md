@@ -1,4 +1,4 @@
-![image](https://github.com/leherpel/ar-script-examples/assets/81385520/68d47d2b-3e9e-4c12-a044-ecd24d339de9)# ar-script-examples
+# ar-script-examples
 Collection of Powershell scripts for automating processes in Access Reviews, such as review creation
 
 ## Scenarios
