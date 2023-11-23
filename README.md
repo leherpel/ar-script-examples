@@ -1,10 +1,13 @@
-# ar-script-examples
+![image](https://github.com/leherpel/ar-script-examples/assets/81385520/68d47d2b-3e9e-4c12-a044-ecd24d339de9)# ar-script-examples
 Collection of Powershell scripts for automating processes in Access Reviews, such as review creation
 
 ## Scenarios
 - [Get contacted reviewers and reviewers with decisions](#GetListOfContactedReviwersForAadRoleReviews)
 
-## Prerequisites
+## Azure Resource review authentication 
+- For the script `UpdateAzureResourceReviewsFromMonthlyToQuarterly.ps1` you need to be an owner of a subscription you are modifying
+
+## Graph Script Prerequisites
 
 1. Getting approved for Access Reviews Graph API permissions:   
     - The person or app which executes any script for managing/reading Access Reviews or makes the equivalent API calls needs to have the proper Graph permissions for Access Reviews in their tenant.
