@@ -30,6 +30,12 @@ Collection of Powershell scripts for automating processes in Access Reviews, suc
 1. Run the desired Powershell script like so `.\asdf.ps1`.
 3. You might be prompted for an interactive login as the user you granted permissions to in Prerequisites.
 
+## Bulk review steps
+1. Ensure you follow the prerequisites to get the correct Graph permissions.
+2. Run the `BulkReview/Setup.ps1` script first to install the required modules
+3. Run the `GetAllReviewDecisionsIntoCsv.ps1` script to get all of the decisions from the latest active stage for reviews matching the name you pass in
+4. Review the contents of the output file: ``
+5. Run the `MakeDecision.ps1` to provide the decision 
 
 ## GetListOfContactedReviwersForAadRoleReviews
 
