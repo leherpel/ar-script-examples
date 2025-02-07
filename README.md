@@ -33,10 +33,12 @@ Collection of Powershell scripts for automating processes in Access Reviews, suc
 ## Bulk review steps
 1. Ensure you follow the prerequisites to get the correct Graph permissions.
 2. Run the `BulkReview/Setup.ps1` script first to install the required modules
-3. Run the `BulkReview/GetAllReviewDecisionsIntoCsv.ps1` script to get all of the decisions from the latest active stage for reviews matching the name you pass in
-4. Review the contents of the output file: `AccessReviewPendingDecisions.csv`
-5. Add `Approve` or `Deny` and a `Justification` if applicable to the rows you are reviewing
-6. Run the `MakeDecision.ps1` and pass in the path to the `AccessReviewPendingDecisions.csv` file
+3. Run the `GetAllMultiStageReviewDecisionsByNameIntoCsv.ps1`, `GetAllActiveSingleStageReviewsByName.ps1`, or `GetAllActiveELMReviews.ps1` script depending on which review type you are reviewing
+    - You don't need to pass review names in quotes
+5. Review the contents of the output file: `AccessReviewPendingDecisions.csv`
+6. Add `Approve`, `Deny`, or `Recommendation` to take the recommendations
+    - Add a `Justification` if applicable to the rows you are reviewing
+7. Run the `MakeDecision.ps1` and pass in the path to the `AccessReviewPendingDecisions.csv` file, just pass in `AccessReviewPendingDecisions.csv` if running the Get decisons from the same folder
 
 ## GetListOfContactedReviwersForAadRoleReviews
 
