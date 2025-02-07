@@ -23,10 +23,14 @@ foreach ($row in $csvData) {
     $stageId = $row.StageId
     $decisionId = $row.DecisionId
 
+    if ($decision -eq "Recommendation") {
+        $decision = $row.Recommendation
+    }
+
     # Output the values (or perform any other operation)
     Write-Output "Username: $username"
     Write-Output "UserId: $userId"
-    Write-Output "GroupName: $groupName"
+    Write-Output "ResourceName: $groupName"
     Write-Output "Recommendation: $recommendation"
     Write-Output "Decision: $decision"
     Write-Output "Justification: $justification"
@@ -41,9 +45,15 @@ foreach ($row in $csvData) {
 	    justification = $justification
     }
 
-    Update-MgIdentityGovernanceAccessReviewDefinitionInstanceStageDecision -AccessReviewScheduleDefinitionId $parentReviewId -AccessReviewInstanceId $instanceReviewId -AccessReviewStageId $stageId -AccessReviewInstanceDecisionItemId $decisionId -BodyParameter $params
+    if ($null -ne $stageId) {
+        $stageId = $instanceReviewId
+    }
 
-    break
+    try {
+        Update-MgIdentityGovernanceAccessReviewDefinitionInstanceStageDecision -AccessReviewScheduleDefinitionId $parentReviewId -AccessReviewInstanceId $instanceReviewId -AccessReviewStageId $stageId -AccessReviewInstanceDecisionItemId $decisionId -BodyParameter $params
+    } catch {
+        Write-Output "An error occurred when sending decision Error: $_"
+    }
 }
 
 
