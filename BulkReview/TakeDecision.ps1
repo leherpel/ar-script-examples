@@ -1,6 +1,8 @@
 ﻿
+$tenantId = Read-Host "Enter tenant Id"
+
 # Login to Graph
-Connect-MgGraph -Scopes "AccessReview.Read.All, AccessReview.ReadWrite.All" -ContextScope Process -NoWelcome
+Connect-MgGraph -Scopes "AccessReview.Read.All, AccessReview.ReadWrite.All" -ContextScope Process -NoWelcome -TenantId $tenantId
 
 # Define the path to the CSV file
 $csvFilePath =  Read-Host "Enter your csv file name (should be in the same directory)"
