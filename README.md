@@ -1,11 +1,7 @@
 # ar-script-examples
 Collection of Powershell scripts for automating processes in Access Reviews, such as review creation
 
-## Scenarios
-- [Get contacted reviewers and reviewers with decisions](#GetListOfContactedReviwersForAadRoleReviews)
 
-## Azure Resource review authentication 
-- For the script `UpdateAzureResourceReviewsFromMonthlyToQuarterly.ps1` you need to be an owner of a subscription you are modifying
 
 ## Graph Script Prerequisites
 
@@ -25,18 +21,22 @@ Collection of Powershell scripts for automating processes in Access Reviews, suc
             - **AccessReview.ReadWrite.All**
         6. Click '**Consent**' if you don’t already have the permissions, if it reads '**Unconsent**' you already have the permissions.
 
-### Executing the scripts
+**Note:** For running `UpdateAzureResourceReviewsFromMonthlyToQuarterly.ps1` you need to be an owner of a subscription you are modifying 
+
+##### Executing the scripts
 
 1. Run the desired Powershell script like so `.\asdf.ps1`.
 3. You might be prompted for an interactive login as the user you granted permissions to in Prerequisites.
 
-## Bulk review steps
+## Bulk review
 1. Ensure you follow the prerequisites to get the correct Graph permissions.
 2. Run the `BulkReview/Setup.ps1` script first to install the required modules
-3. Run the `BulkReview/GetAllReviewDecisionsIntoCsv.ps1` script to get all of the decisions from the latest active stage for reviews matching the name you pass in
-4. Review the contents of the output file: `AccessReviewPendingDecisions.csv`
-5. Add `Approve` or `Deny` and a `Justification` if applicable to the rows you are reviewing
-6. Run the `MakeDecision.ps1` and pass in the path to the `AccessReviewPendingDecisions.csv` file
+3. Run the `GetAllMultiStageReviewDecisionsByNameIntoCsv.ps1`, `GetAllActiveSingleStageReviewsByName.ps1`, or `GetAllActiveELMReviews.ps1` script depending on which review type you are reviewing
+    - You don't need to pass review names in quotes
+5. Review the contents of the output file: `AccessReviewPendingDecisions.csv`
+6. Add `Approve`, `Deny`, or `Recommendation` to take the recommendations
+    - Add a `Justification` if applicable to the rows you are reviewing
+7. Run the `MakeDecision.ps1` and pass in the path to the `AccessReviewPendingDecisions.csv` file, just pass in `AccessReviewPendingDecisions.csv` if running the Get decisons from the same folder
 
 ## GetListOfContactedReviwersForAadRoleReviews
 
@@ -46,7 +46,7 @@ Collection of Powershell scripts for automating processes in Access Reviews, suc
 ![image](https://github.com/leherpel/ar-script-examples/assets/81385520/45bf7517-9e12-4dcc-bc4a-299604def4eb)
 
 
-### Use the APIs to find contacted reviewers and find decisions made:
+##### Use the APIs to find contacted reviewers and find decisions made:
 1. Get a list of review definitions
     - [List definitions](https://learn.microsoft.com/en-us/graph/api/accessreviewset-list-definitions?view=graph-rest-1.0&tabs=http)
     - `GET - https://graph.microsoft.com/v1.0/identityGovernance/accessReviews/definitions`
